@@ -8,6 +8,6 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/Chaminda202/Microservice-architecture-try-out
+          uri: https://github.com/Chaminda202/microservice-application
           search-paths:
-            - 'local_git'
+            - '*service'
