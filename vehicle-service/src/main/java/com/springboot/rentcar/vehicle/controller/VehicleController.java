@@ -24,7 +24,7 @@ public class VehicleController {
         return ResponseEntity.ok().body(this.vehicleService.findByType(type));
     }
 
-    @GetMapping(value = "/byType")
+    @GetMapping(value = "/byId")
     public ResponseEntity<Vehicle> findById(@RequestParam("id") Integer id){
         return ResponseEntity.ok().body(this.vehicleService.findById(id));
     }
