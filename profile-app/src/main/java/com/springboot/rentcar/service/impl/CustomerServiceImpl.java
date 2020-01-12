@@ -7,13 +7,25 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-@NoArgsConstructor
 @AllArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
-    public Customer create(Customer customer){
+    @Override
+    public Customer create(Customer customer) {
         return this.customerRepository.save(customer);
+    }
+
+    @Override
+    public Customer findByDlNumber(String dlNumber) {
+        return this.customerRepository.findByDlNumber(dlNumber).orElse(null);
+    }
+
+    @Override
+    public List<Customer> all() {
+        return this.customerRepository.findAll();
     }
 }
