@@ -3,4 +3,8 @@ spring:
     config:
       uri:
         - http://localhost:8888
+  application:
+    name: first-demo
 
+  profiles:
+    active: dev
