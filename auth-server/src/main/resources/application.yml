@@ -1,0 +1,22 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: auth-server
+#  security:
+#    user:
+#      name: test_user
+#      password: test@123
+#      roles:
+#        - ADMIN, USER
+#
+#security:
+#  oauth2:
+#    client:
+#      client-id: mobile
+#      client-secret: pin
+#      access-token-validity-seconds: 3600
+#      authorized-grant-types:
+#        - authorization_code,refresh_token,password,client_credential
+#      scope:
+#        - READ,WRITE

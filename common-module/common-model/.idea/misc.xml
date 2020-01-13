@@ -6,6 +6,8 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/../../profile-app/pom.xml" />
+        <option value="$PROJECT_DIR$/../../vehicle-service/pom.xml" />
+        <option value="$PROJECT_DIR$/../../config-servers/cloud-config/pom.xml" />
       </list>
     </option>
   </component>
