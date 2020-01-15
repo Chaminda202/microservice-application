@@ -14,8 +14,8 @@ INSERT INTO oauth_client_details (client_id, client_secret, web_server_redirect_
      (2,1), /* read admin */
      (3,1), /* update admin */
      (4,1), /* delete admin */
-     (2,2),  /* read user */
-     (3,2);  /* update user */
+     (2,2);  /* read user */
+
 insert into user (id, username,password, email, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked) VALUES ('1', 'test1','{bcrypt}$2y$12$yWStzYMGsawd7JTylTbNh.qviaJ554e1g6FQB7aKR5IQWq4psgU5C', 'test@gmail.com', '1', '1', '1', '1');
  insert into  user (id, username,password, email, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked) VALUES ('2', 'test2', '{bcrypt}$2y$12$yWStzYMGsawd7JTylTbNh.qviaJ554e1g6FQB7aKR5IQWq4psgU5C','test1@gmail.com', '1', '1', '1', '1');
 

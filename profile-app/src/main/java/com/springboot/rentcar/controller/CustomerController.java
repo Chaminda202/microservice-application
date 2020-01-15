@@ -5,6 +5,7 @@ import com.springboot.rentcar.service.CustomerService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Customer> create(@RequestBody Customer customer){
         return ResponseEntity.ok().body(this.customerService.create(customer));
     }
@@ -26,6 +28,7 @@ public class CustomerController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('read_profile')")
     public ResponseEntity<List<Customer>> findAll(){
         return ResponseEntity.ok().body(this.customerService.all());
     }

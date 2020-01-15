@@ -4,6 +4,7 @@ import com.springboot.rentcar.common.model.Vehicle;
 import com.springboot.rentcar.vehicle.service.VehicleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/vehicles")
 @AllArgsConstructor
+
 public class VehicleController {
     private VehicleService vehicleService;
 
@@ -30,7 +32,8 @@ public class VehicleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Vehicle>> findAll(){
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<Vehicle>> findAll() {
         return ResponseEntity.ok().body(this.vehicleService.all());
     }
 }
