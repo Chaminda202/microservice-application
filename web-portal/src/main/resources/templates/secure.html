@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -13,6 +13,27 @@
 <div class="container">
     <div class="jumbotron">
         <h2>Welcome to secure page</h2>
+        <form name="fetch-customers" th:action="@{/customers}" th:formmethod="POST">
+            <button type="submit" class="btn btn-primary">customers</button>
+        </form>
+    </div>
+    <div th:if="${customerList != null}">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>First Name</td>
+                    <td>Last Name</td>
+                    <td>DL number</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="customer: ${customerList}">
+                    <td><span th:text="${customer.firstName}"></span></td>
+                    <td><span th:text="${customer.lastName}"></span></td>
+                    <td><span th:text="${customer.dlNumber}"></span></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 <!-- Optional JavaScript -->

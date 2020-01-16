@@ -22,8 +22,8 @@ public class CustomerController {
         return ResponseEntity.ok().body(this.customerService.create(customer));
     }
 
-    @GetMapping(value = "/byDlNumber")
-    public ResponseEntity<Customer> findByDlNumber(@RequestParam("dlNumber") String dlNumber){
+    @GetMapping(value = "/{dlNumber}")
+    public ResponseEntity<Customer> findByDlNumber(@PathVariable("dlNumber") String dlNumber){
         return ResponseEntity.ok().body(this.customerService.findByDlNumber(dlNumber));
     }
 
