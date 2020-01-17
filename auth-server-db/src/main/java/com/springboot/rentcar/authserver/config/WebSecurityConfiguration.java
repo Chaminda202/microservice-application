@@ -1,6 +1,7 @@
 package com.springboot.rentcar.authserver.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Bean
+    @Qualifier("authenticationManagerBean")
     public AuthenticationManager getAuthenticationManager() throws Exception {
         return super.authenticationManagerBean();
     }

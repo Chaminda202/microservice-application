@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurer;
@@ -13,6 +14,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import javax.sql.DataSource;
 
@@ -24,14 +26,24 @@ public class AuthorizationServerConfiguration implements AuthorizationServerConf
     private DataSource dataSource;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @Value(value = "${config.oauth2.private-key}")
     private String privateKey;
     @Value(value = "${config.oauth2.public-key}")
     private String publicKey;
+
     @Bean
     public TokenStore jdbcTokenStore(){
         return new JdbcTokenStore(this.dataSource);
     }
+
+    // Not save the token in database
+    /*@Bean
+    public TokenStore tokenStore(){
+        return new JwtTokenStore(this.jwtAccessTokenConverter());
+    }*/
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security
@@ -52,8 +64,16 @@ public class AuthorizationServerConfiguration implements AuthorizationServerConf
         endpoint
                 .tokenStore(jdbcTokenStore())
                 .accessTokenConverter(this.jwtAccessTokenConverter())
+                .userDetailsService(this.userDetailsService)
                 .authenticationManager(this.authenticationManager);
     }
+
+    /*public void configure(AuthorizationServerEndpointsConfigurer endpoint) throws Exception {
+        endpoint
+                .tokenStore(this.tokenStore())
+                .accessTokenConverter(this.jwtAccessTokenConverter())
+                .authenticationManager(this.authenticationManager);
+    }*/
 
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
@@ -62,4 +82,6 @@ public class AuthorizationServerConfiguration implements AuthorizationServerConf
         accessTokenConverter.setVerifierKey(this.publicKey);
         return accessTokenConverter;
     }
+
+
 }
