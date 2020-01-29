@@ -1,6 +1,6 @@
 package com.springboot.rentcar.vehicle.repository;
 
-import com.springboot.rentcar.common.model.Vehicle;
+import com.springboot.rentcar.common.model.vehicle.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

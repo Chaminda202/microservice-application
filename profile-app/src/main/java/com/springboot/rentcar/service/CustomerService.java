@@ -1,11 +1,14 @@
 package com.springboot.rentcar.service;
 
-import com.springboot.rentcar.common.model.Customer;
+import com.springboot.rentcar.common.model.customer.Customer;
+import com.springboot.rentcar.common.wrapper.customer.CustomerResponse;
+import com.springboot.rentcar.common.wrapper.vehicle.VehicleResponse;
 
 import java.util.List;
 
 public interface CustomerService {
-    public Customer create(Customer customer);
-    public Customer findByDlNumber(String dlNumber);
-    public List<Customer> all();
+    public CustomerResponse create(Customer customer);
+    public CustomerResponse findByDlNumber(String dlNumber);
+    public CustomerResponse findById(Integer id);
+    public List<CustomerResponse> all();
 }
