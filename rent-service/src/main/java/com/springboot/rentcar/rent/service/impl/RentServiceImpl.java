@@ -11,6 +11,9 @@ import com.springboot.rentcar.rent.client.VehicleClient;
 import com.springboot.rentcar.rent.enumeration.ResponseType;
 import com.springboot.rentcar.rent.feign.CustomerFeignClient;
 import com.springboot.rentcar.rent.feign.VehicleFeignClient;
+import com.springboot.rentcar.rent.hystrix.CommonHystrixCommand;
+import com.springboot.rentcar.rent.hystrix.CustomerCommand;
+import com.springboot.rentcar.rent.hystrix.VehicleCommand;
 import com.springboot.rentcar.rent.repository.RentRepository;
 import com.springboot.rentcar.rent.service.RentService;
 import lombok.AllArgsConstructor;
@@ -41,18 +44,18 @@ public class RentServiceImpl implements RentService {
             if(ResponseType.FULL != responseType){
                 return buildPartialRentResponse(response.get());
             }
-            //using rest template
-            /*else {
-                CustomerResponse customerResponse = this.customerClient.getCustomerById(response.get().getCustomerId());
-                VehicleResponse vehicleResponse = this.vehicleClient.getVehicleById(response.get().getVehicleId());
+            //using rest template with Hystrix
+            else {
+                CustomerResponse customerResponse = this.getCustomerResponse(response.get().getCustomerId());
+                VehicleResponse vehicleResponse = this.getVehicleResponse(response.get().getVehicleId());
                 return RentMap.mapFullRentResponse(response.get(), customerResponse, vehicleResponse);
-            }*/
+            }
             //using feign client
-             else {
+            /* else {
                 CustomerResponse customerResponse = this.customerFeignClient.findById(response.get().getCustomerId());
                 VehicleResponse vehicleResponse = this.vehicleFeignClient.findById(response.get().getVehicleId());
                 return RentMap.mapFullRentResponse(response.get(), customerResponse, vehicleResponse);
-            }
+            }*/
         }
 
         return null;
@@ -65,6 +68,40 @@ public class RentServiceImpl implements RentService {
                 .stream()
                 .map(this::buildPartialRentResponse)
                 .collect(Collectors.toList());
+    }
+
+    //using separate Hystrix command implementation with rest template, feign implementation also like this
+    /*private VehicleResponse getVehicleResponse(Integer vehicleId){
+        VehicleCommand vehicleCommand = new VehicleCommand(this.vehicleClient, vehicleId);
+        return vehicleCommand.execute();
+    }
+
+    private CustomerResponse getCustomerResponse(Integer customerId){
+        CustomerCommand customerCommand = new CustomerCommand(this.customerClient, customerId);
+        return customerCommand.execute();
+    }*/
+
+    //using common Hystrix command implementation
+    private VehicleResponse getVehicleResponse(Integer vehicleId){
+        CommonHystrixCommand<VehicleResponse> commonHystrixCommand = new CommonHystrixCommand<VehicleResponse>("default",
+                ()-> {
+                    return this.vehicleClient.getVehicleById(vehicleId);
+                 },
+                ()-> {
+                    return new VehicleResponse();
+                });
+        return  commonHystrixCommand.execute();
+    }
+
+    private CustomerResponse getCustomerResponse(Integer customerId){
+        CommonHystrixCommand<CustomerResponse> commonHystrixCommand = new CommonHystrixCommand<CustomerResponse>("default",
+                ()-> {
+                    return this.customerClient.getCustomerById(customerId);
+                },
+                ()-> {
+                    return new CustomerResponse();
+                });
+        return  commonHystrixCommand.execute();
     }
 
     private PartialRentResponse buildPartialRentResponse(Rent rent){

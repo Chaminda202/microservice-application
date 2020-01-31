@@ -28,13 +28,8 @@ public class CustomerClient {
                 .build()
                 .toUri()
                 .toString();
-        try{
-            ResponseEntity<CustomerResponse> responseEntity = restTemplate.exchange(changeUrl, HttpMethod.GET, request, CustomerResponse.class);
-            return responseEntity.getBody();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        ResponseEntity<CustomerResponse> responseEntity = restTemplate.exchange(changeUrl, HttpMethod.GET, request, CustomerResponse.class);
+        return responseEntity.getBody();
     }
 
     private String buildFullUrl(String contextPath, String endpoint){
