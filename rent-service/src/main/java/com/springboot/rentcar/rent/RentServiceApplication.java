@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 @EnableFeignClients
 @EnableEurekaClient
 @EnableCircuitBreaker
+@EnableHystrixDashboard // when we enable hystrix dashdoard using commonHystrixMethod implementation, can not identify which service call is failed,
+						// for that should be created seperate command
 public class RentServiceApplication {
 
 	public static void main(String[] args) {
