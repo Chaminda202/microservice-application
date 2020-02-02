@@ -1,7 +1,10 @@
 package com.springboot.rentcar.rent.service.impl;
 
 import com.springboot.rentcar.common.model.rent.Rent;
+import com.springboot.rentcar.common.util.ConstantValue;
+import com.springboot.rentcar.common.util.JacksonUtil;
 import com.springboot.rentcar.common.wrapper.customer.CustomerResponse;
+import com.springboot.rentcar.common.wrapper.rent.FullRentResponse;
 import com.springboot.rentcar.common.wrapper.rent.PartialRentResponse;
 import com.springboot.rentcar.common.wrapper.rent.RentMap;
 import com.springboot.rentcar.common.wrapper.rent.RentResponse;
@@ -12,11 +15,11 @@ import com.springboot.rentcar.rent.enumeration.ResponseType;
 import com.springboot.rentcar.rent.feign.CustomerFeignClient;
 import com.springboot.rentcar.rent.feign.VehicleFeignClient;
 import com.springboot.rentcar.rent.hystrix.CommonHystrixCommand;
-import com.springboot.rentcar.rent.hystrix.CustomerCommand;
-import com.springboot.rentcar.rent.hystrix.VehicleCommand;
 import com.springboot.rentcar.rent.repository.RentRepository;
 import com.springboot.rentcar.rent.service.RentService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class RentServiceImpl implements RentService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RentServiceImpl.class);
     private RentRepository rentRepository;
     private CustomerClient customerClient;
     private VehicleClient vehicleClient;
@@ -39,16 +43,18 @@ public class RentServiceImpl implements RentService {
 
     @Override
     public RentResponse findById(int id, ResponseType responseType) {
+        LOGGER.info("{} -> {} -> {} -> {} -> {}", ConstantValue.REQUEST, this.getClass().getCanonicalName(), Thread.currentThread().getStackTrace()[1].getMethodName(), id, responseType);
+        RentResponse rentResponse = null;
         Optional<Rent> response = this.rentRepository.findById(id);
         if(response.isPresent())  {
             if(ResponseType.FULL != responseType){
-                return buildPartialRentResponse(response.get());
+                rentResponse = buildPartialRentResponse(response.get());
             }
             //using rest template with Hystrix
             else {
                 CustomerResponse customerResponse = this.getCustomerResponse(response.get().getCustomerId());
                 VehicleResponse vehicleResponse = this.getVehicleResponse(response.get().getVehicleId());
-                return RentMap.mapFullRentResponse(response.get(), customerResponse, vehicleResponse);
+                rentResponse = RentMap.mapFullRentResponse(response.get(), customerResponse, vehicleResponse);
             }
             //using feign client
             /* else {
@@ -57,8 +63,8 @@ public class RentServiceImpl implements RentService {
                 return RentMap.mapFullRentResponse(response.get(), customerResponse, vehicleResponse);
             }*/
         }
-
-        return null;
+        LOGGER.info("{} -> {} -> {} -> {}", ConstantValue.RESPONSE, this.getClass().getCanonicalName(), Thread.currentThread().getStackTrace()[1].getMethodName(), JacksonUtil.convertObjectToJson(rentResponse));
+        return rentResponse;
     }
 
     @Override

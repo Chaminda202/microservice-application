@@ -1,11 +1,15 @@
 package com.springboot.rentcar.vehicle.service.impl;
 
 import com.springboot.rentcar.common.model.vehicle.Vehicle;
+import com.springboot.rentcar.common.util.ConstantValue;
+import com.springboot.rentcar.common.util.JacksonUtil;
 import com.springboot.rentcar.common.wrapper.vehicle.VehicleMap;
 import com.springboot.rentcar.common.wrapper.vehicle.VehicleResponse;
 import com.springboot.rentcar.vehicle.repository.VehicleRepository;
 import com.springboot.rentcar.vehicle.service.VehicleService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class VehicleServiceImpl implements VehicleService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(VehicleServiceImpl.class);
     private VehicleRepository vehicleRepository;
 
     @Override
@@ -33,11 +38,14 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleResponse findById(Integer id) {
+        LOGGER.info("{} -> {} -> {} -> {}", ConstantValue.REQUEST, this.getClass().getCanonicalName(), Thread.currentThread().getStackTrace()[1].getMethodName(), id);
         Optional<Vehicle> response = this.vehicleRepository.findById(id);
+        VehicleResponse vehicleResponse = null;
         if(response.isPresent()){
-            return buildVehicleResponse(response.get());
+            vehicleResponse = buildVehicleResponse(response.get());
         }
-        return null;
+        LOGGER.info("{} -> {} -> {} -> {}", ConstantValue.RESPONSE, this.getClass().getCanonicalName(), Thread.currentThread().getStackTrace()[1].getMethodName(), JacksonUtil.convertObjectToJson(vehicleResponse));
+        return vehicleResponse;
     }
 
     @Override
