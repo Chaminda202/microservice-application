@@ -17,7 +17,7 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("SpringBoot Rest Service")
+                //.groupName("SpringBoot Rest Service") // when we add the group name, have to define group id like this /v2/api-docs>group=SpringBoot Rest Service
                 .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo()).select()
                 .apis(RequestHandlerSelectors

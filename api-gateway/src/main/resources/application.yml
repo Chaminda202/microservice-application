@@ -1,0 +1,26 @@
+zuul:
+    routes:
+      vehicle:
+        path: /vehicle/**
+        serviceId: vehicle-service
+      rent:
+        path: /rent/**
+        serviceId: rent-service
+      profile:
+        path: /profile/**
+        serviceId: profile-service
+    retryable: false
+
+    host:
+      connect-timeout-millis: 2000
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+  endpoint:
+    health:
+      show-details: ALWAYS
